@@ -78,7 +78,7 @@ def dotNetNumbersFormat() -> tuple[str, str]:
 
 
 def callDotNet(cmdline_args:list[str]=[], input:str='', timeout:int=30, build:bool=True) -> str:
-   
+    
     path=getpath()
     project_name=dotNetProjectName()
 
@@ -91,12 +91,12 @@ def callDotNet(cmdline_args:list[str]=[], input:str='', timeout:int=30, build:bo
                 pass
     if build:
         try:
-            rc = subprocess.run(['dotnet', 'build'], cwd=path, shell=True)
+            rc = subprocess.run(['dotnet', 'build'], cwd=path)
             if rc.returncode!=0:
                 raise FileNotFoundError
         except:
             print('!!Compile falled to fallback!!')
-            rc = subprocess.run(['dotnet build'], cwd=path, shell=True)
+            rc = subprocess.run(['dotnet build'], cwd=path)
             print("Fallback completed, don't worry")
 
     try:

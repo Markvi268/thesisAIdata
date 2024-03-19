@@ -25,9 +25,7 @@ if __name__=='__main__':
 
     sys.path.insert(0, testpath)
     sys.path.insert(0, path+'src')
-    sys.path.insert(0, path+'../helpers')
 
-    #Import code to test
     from tests import *
 
     curr_file=os.path.abspath(__file__)
@@ -35,7 +33,6 @@ if __name__=='__main__':
 
     print('Test', exname)
 
-    #if __name__ == '__main__':
     unittest.main(verbosity=2, exit=False)
 
     outputfile=open(resultfile, 'wt')
