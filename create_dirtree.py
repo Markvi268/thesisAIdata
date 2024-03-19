@@ -75,7 +75,7 @@ if __name__=='__main__':
     unittest.main(verbosity=2, exit=False)
 
     outputfile=open(resultfile, 'wt')
-    outputfile.write('{0}\t{1}'.format(completed(), started()))
+    outputfile.write('{0}   {1}'.format(completed(), started()))
     outputfile.close()
     if started()>completed():
         print(started()-completed(), '/', started(), 'tests failed!')
@@ -93,13 +93,12 @@ import re
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../helpers'))
 sys.path.append(src_path)
 from helpers import *
-
+from functools import partial
 
 started_tests = 0
 completed_tests = 0
 
-
-def rmoutput():
+def rmoutput() -> None:
     for filename in []:
         try:
             os.remove(filename)
@@ -109,39 +108,37 @@ def rmoutput():
 
 def repeat(times:int=0):
     def repeatHelper(f):
-        def callHelper(*args) -> None:
-            for i in range(0, times):
-                f(*args)
+        def callHelper(*args:None) -> None:
+            part_func = partial(f, *args)
+            for _ in range(times):
+                part_func()
 
         return callHelper
 
     return repeatHelper
 
 class TestCode(unittest.TestCase):
-    #@timeout_decorator.timeout(30)
     previous:str = ''
     extra_numbers:list[int] = []
-    smallest = 0
-    largest = 0
-    occurences = {}
-    @repeat(500)
+    smallest:int = 0
+    largest:int = 0
+    occurences:dict[int,int] = {}
+
+    @repeat(times=500)
     def test_VS(self):
         #Test C# program
         self.startTest()
 
-        expected_output=['+']
-        pattern = re.compile(r'^\s*(\d+\s+){6}\d+\s+\+\s+\d+\s+$')
+        pattern = re.compile(r'^(\d+\s+){7}\+\s+\d+\s*$')
         if started_tests > 1:
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=False)
         else:
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=True)
 
-        for eo in expected_output:
-            print('Check if "'+eo+'" is in output')
-            self.assertIn(eo, output)
-
         self.assertRegex(output, pattern)
+
         numbers = [int(num) for num in output.split() if num.isdigit()]
+
         print('Output:', output)
         print('Previous:', self.previous)
         self.assertNotEqual(self.previous, output, msg='Output is the same as previous')
@@ -217,7 +214,7 @@ def started():
 
 
 """
-skiplist = ['.git','helpers','dotnet_test','__pycache__','studentscodes','.gitignore','LICENSE','README.md','thesisAIdata.sln']
+skiplist = ['.git','helpers','dotnet_test','__pycache__','studentscodes','.gitignore','LICENSE','README.md','thesisAIdata.sln','solution','create_dirtree.py']
 def create_dirtree() -> None:
     path = os.getcwd()
     
@@ -262,7 +259,7 @@ def create_dirtree() -> None:
 
 
 def studenCodeTree() -> None:
-    skiplist1 = ['.git','helpers','dotnet_test','__pycache__','tests','chatGPT','copilot','.gitignore','LICENSE','README.md','thesisAIdata.sln']
+    skiplist1 = ['.git','helpers','dotnet_test','__pycache__','tests','chatGPT','copilot','.gitignore','LICENSE','README.md','thesisAIdata.sln','solution']
     path = os.getcwd()
     copypath = 'C:/Users/Markku/Desktop/Markku_Koulu/Opinnäytetyö/lotto/lotto'
     i:int = 1

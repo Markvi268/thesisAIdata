@@ -1,6 +1,4 @@
-﻿using System;
-/*
-Luo c# ohjelma: Lotossa arvotaan seitsemän (7) varsinaista numeroa ja yksi (1) lisänumero. Numerot ovat väliltä 1-40.
+﻿/*Luo C# ohjelma: Lotossa arvotaan seitsemän (7) varsinaista numeroa ja yksi (1) lisänumero. Numerot ovat väliltä 1-40.
 
 Esittele kahdeksan (8) alkioinen lotto-taulukko ja arvo siihen lottonumerot (7 ensimmäistä
 on siis varsinaisia lottonumeroita ja viimeinen on lisänumero). Muista, että samaa numeroa
@@ -12,11 +10,13 @@ Tulosta lopuksi lottorivi seuraavasti:
 
 HUOM!! seitsemän varsinaista numeroa on lajiteltu suuruusjärjestykseen! Mutta
 lisänumeroa ei tietenkään saa ottaa lajitteluun mukaan! Löytysköhän Array.Sort:sta sellainen
-ominaisuus, jolla tämän saisi ratkaistua? Voisi esimerkiksi kertoa, että mistä indeksistä eteenpäin lajittellaan niin ja niin monta alkiota...
-
-
-HUOM! Luovempi kysely
+ominaisuus, jolla tämän saisi ratkaistua? Voisi esimerkiksi kertoa, että mistä indeksistä eteenpäin lajittellaan niin 
+ja niin monta alkiota...
 */
+// HUOM! Luovempi kysely
+
+using System;
+
 class Lotto
 {
     static void Main()
@@ -24,34 +24,34 @@ class Lotto
         int[] lottoNumbers = new int[8];
         Random rand = new Random();
 
-        // Arvotaan 7 varsinaista numeroa
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < lottoNumbers.Length - 1; i++)
         {
             int number;
             do
             {
                 number = rand.Next(1, 41);
-            } while (Array.Exists(lottoNumbers, element => element == number));
+            } while (Array.IndexOf(lottoNumbers, number) != -1);
+
             lottoNumbers[i] = number;
         }
 
-        // Järjestetään 7 ensimmäistä numeroa
+        // Lajittele ensimmäiset seitsemän numeroa
         Array.Sort(lottoNumbers, 0, 7);
 
-        // Arvotaan lisänumero niin, että se ei ole mikään varsinaisista numeroista
+        // Arvo lisänumero, joka ei ole vielä lottorivissä
         int extraNumber;
         do
         {
             extraNumber = rand.Next(1, 41);
-        } while (Array.Exists(lottoNumbers, element => element == extraNumber));
+        } while (Array.IndexOf(lottoNumbers, extraNumber) != -1);
 
         lottoNumbers[7] = extraNumber;
 
-        // Tulostetaan lottorivi
-        for (int i = 0; i < 7; i++)
+        // Tulosta lottorivi
+        for (int i = 0; i < lottoNumbers.Length - 1; i++)
         {
             Console.Write(lottoNumbers[i] + "   ");
         }
-        Console.WriteLine("+   " + extraNumber);
+        Console.Write("+   " + lottoNumbers[7]);
     }
 }

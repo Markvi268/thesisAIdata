@@ -17,7 +17,7 @@ if __name__=='__main__':
             #print('#', rc)
             rc=subprocess.call(cmdline, shell=True, cwd=file)
             #print('#', rc)
-             try:
+            try:
                 exresfile=open(file+'/tests/result.txt', 'rt')
                 res=exresfile.read()
                 #print('#',res)

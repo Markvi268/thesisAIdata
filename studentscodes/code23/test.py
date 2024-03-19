@@ -39,7 +39,7 @@ if __name__=='__main__':
     unittest.main(verbosity=2, exit=False)
 
     outputfile=open(resultfile, 'wt')
-    outputfile.write('{0}	{1}'.format(completed(), started()))
+    outputfile.write('{0}   {1}'.format(completed(), started()))
     outputfile.close()
     if started()>completed():
         print(started()-completed(), '/', started(), 'tests failed!')

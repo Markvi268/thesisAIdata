@@ -27,5 +27,6 @@ if __name__=='__main__':
                 #Result file not found
                 resultsfile.write(file+'\t'+'0\t0\n')
                 pass
+
     resultsfile.close()
 

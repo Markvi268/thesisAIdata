@@ -1,38 +1,55 @@
-﻿using System;
+﻿/*Luo C# ohjelma: Lotossa arvotaan seitsemän (7) varsinaista numeroa ja yksi (1) lisänumero. Numerot ovat väliltä 1-40.
 
-// uusi keskustelu tehtävänannolle, mikä löytyy t1.cs tiedostosta
+Esittele kahdeksan (8) alkioinen lotto-taulukko ja arvo siihen lottonumerot (7 ensimmäistä
+on siis varsinaisia lottonumeroita ja viimeinen on lisänumero). Muista, että samaa numeroa
+ei saa tulla lottoriviin eli mieti miten voisit tarkistaa onko arvottu numero jo lottorivissä entuudestaan ja silloin sen tilalle pitää arpoa uusi numero.
+
+Tulosta lopuksi lottorivi seuraavasti:
+
+1   4   12   16   19   25   31   +   13
+
+HUOM!! seitsemän varsinaista numeroa on lajiteltu suuruusjärjestykseen! Mutta
+lisänumeroa ei tietenkään saa ottaa lajitteluun mukaan! Löytysköhän Array.Sort:sta sellainen
+ominaisuus, jolla tämän saisi ratkaistua? Voisi esimerkiksi kertoa, että mistä indeksistä eteenpäin lajittellaan niin 
+ja niin monta alkiota...
+*/
+
+using System;
+
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        int[] lottoNumbers = GenerateLottoNumbers();
-        Array.Sort(lottoNumbers, 0, 7); // Lajitellaan ensimmäiset seitsemän numeroa
-
-        Console.WriteLine("Lottorivi:");
-        for (int i = 0; i < lottoNumbers.Length - 1; i++)
-        {
-            Console.Write(lottoNumbers[i] + "   ");
-        }
-        Console.WriteLine("+   " + lottoNumbers[lottoNumbers.Length - 1]);
-    }
-
-    static int[] GenerateLottoNumbers()
-    {
-        Random random = new Random();
-        int[] numbers = new int[8];
-
+        // Initialize an array to store lotto numbers
+        int[] lottoNumbers = new int[8];
+        
+        // Initialize a random number generator
+        Random rnd = new Random();
+        
+        // Generate lotto numbers
         for (int i = 0; i < 7; i++)
         {
             int randomNumber;
+            // Generate a unique random number
             do
             {
-                randomNumber = random.Next(1, 41); // Generoidaan uusi numero
-            } while (Array.Exists(numbers, element => element == randomNumber)); // Tarkistetaan, onko numero jo lottorivissä
-            numbers[i] = randomNumber;
+                randomNumber = rnd.Next(1, 41);
+            } while (Array.IndexOf(lottoNumbers, randomNumber) != -1);
+            
+            lottoNumbers[i] = randomNumber;
         }
-
-        numbers[7] = random.Next(1, 41); // Lisätään lisänumero
-
-        return numbers;
+        
+        // Generate the bonus number
+        lottoNumbers[7] = rnd.Next(1, 41);
+        
+        // Sort the main lotto numbers
+        Array.Sort(lottoNumbers, 0, 7);
+        
+        // Print the lotto row
+        for (int i = 0; i < 7; i++)
+        {
+            Console.Write(lottoNumbers[i] + "   ");
+        }
+        Console.Write("+   " + lottoNumbers[7]);
     }
 }
