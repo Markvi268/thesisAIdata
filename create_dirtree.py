@@ -118,7 +118,7 @@ class TestCode(unittest.TestCase):
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=False)
         else:
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=True)
-
+        print(f'Output: {output}')
         self.assertRegex(output, pattern)
 
         numbers = [int(num) for num in output.split() if num.isdigit()]
@@ -204,8 +204,13 @@ def create_AIdirtree() -> None:
             testall_file.close()
 
             for i in range(1,51):
-                subprocess.run(['dotnet', 'new', 'console', '-n',f'AI0{i}','-o', f'AItest{i}','--framework','net6.0'], check=True)
-                os.chdir(f'AItest{i}')
+                cmd_line = ['dotnet', 'new', 'console', '-n',f'AI0{i}','-o', f'AItest0{i}','--framework','net6.0']
+                if i >= 10:
+                    cmd_line[4] = f'AI{i}'
+                    cmd_line[6] = f'AItest{i}'
+
+                subprocess.run(cmd_line, check=True)
+                os.chdir(cmd_line[6])
                 print(os.getcwd())
                 old_file = os.path.join(os.getcwd(), 'Program.cs')
                 new_file = os.path.join(os.getcwd(), f'testcode{i}.cs')
@@ -251,8 +256,12 @@ def studenCodeTree() -> None:
             testall_file.close()
 
             for file in os.listdir(copypath):
-                subprocess.run(['dotnet', 'new', 'console', '-n',f'0{i}','-o', f'code{i}','--framework','net6.0'], check=True)
-                os.chdir(f'code{i}')
+                cmd_line = ['dotnet', 'new', 'console', '-n',f'0{i}','-o', f'code0{i}','--framework','net6.0']
+                if i >= 10:
+                    cmd_line[4] = f'{i}'
+                    cmd_line[6] = f'code{i}'
+                subprocess.run(cmd_line, check=True)
+                os.chdir(cmd_line[6])
                 old_file = os.path.join(os.getcwd(), 'Program.cs')
                 os.remove(old_file)
                 os.mkdir('src')

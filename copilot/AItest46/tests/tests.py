@@ -40,7 +40,7 @@ class TestCode(unittest.TestCase):
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=False)
         else:
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=True)
-
+        print(f'Output: {output}')
         self.assertRegex(output, pattern)
 
         numbers = [int(num) for num in output.split() if num.isdigit()]

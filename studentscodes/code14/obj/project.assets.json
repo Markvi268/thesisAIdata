@@ -15,9 +15,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Markku\\Desktop\\Markku_Koulu\\Opinnäytetyö\\thesisAIdata\\studentscodes\\code14\\014.csproj",
-      "projectName": "014",
-      "projectPath": "C:\\Users\\Markku\\Desktop\\Markku_Koulu\\Opinnäytetyö\\thesisAIdata\\studentscodes\\code14\\014.csproj",
+      "projectUniqueName": "C:\\Users\\Markku\\Desktop\\Markku_Koulu\\Opinnäytetyö\\thesisAIdata\\studentscodes\\code14\\14.csproj",
+      "projectName": "14",
+      "projectPath": "C:\\Users\\Markku\\Desktop\\Markku_Koulu\\Opinnäytetyö\\thesisAIdata\\studentscodes\\code14\\14.csproj",
       "packagesPath": "C:\\Users\\Markku\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Markku\\Desktop\\Markku_Koulu\\Opinnäytetyö\\thesisAIdata\\studentscodes\\code14\\obj\\",
       "projectStyle": "PackageReference",

@@ -7,6 +7,7 @@ sys.path.append(src_path)
 from helpers import *
 from functools import partial
 
+
 started_tests = 0
 completed_tests = 0
 
@@ -39,12 +40,11 @@ class TestCode(unittest.TestCase):
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=False)
         else:
             output=callDotNet(cmdline_args=[], input='', timeout=15, build=True)
-
+        print(f'Output: {output}')
         self.assertRegex(output, pattern)
 
         numbers = [int(num) for num in output.split() if num.isdigit()]
 
-        print('Output:', output)
         print('Previous output:', self.previous)
         self.assertNotEqual(self.previous, output, msg='Output is the same as previous')
 
