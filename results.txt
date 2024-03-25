@@ -1,0 +1,23 @@
+AI code:
+lottoTaulukko: 4
+lottoRivi: 1
+lottoNumbers: 1
+lotteryNumbers: 1
+
+Students code:
+taulu: 11
+lottotaulu: 1
+taulukko: 2
+lotto: 5
+lottonumerot: 1
+numerot: 1
+taulu1: 1
+
+Differences:
+taulu: Students 11 AI: 0
+lottotaulu: Students 1 AI: 0
+taulukko: Students 2 AI: 0
+lotto: Students 5 AI: 0
+lottonumerot: Students 1 AI: 0
+numerot: Students 1 AI: 0
+taulu1: Students 1 AI: 0
