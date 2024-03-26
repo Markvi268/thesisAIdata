@@ -20,25 +20,25 @@ using System;
 class Program{
 
     static void Main(){
-        int[] lotto = new int[8];
+        int[] lottoTaulukko = new int[8];
         Random random = new Random();
 
-        for (int i = 0; i < lotto.Length; i++)
+        for (int i = 0; i < lottoTaulukko.Length; i++)
         {
             int numero = random.Next(1, 41);
-            if(lotto.Contains(numero))
+            if(lottoTaulukko.Contains(numero))
                 i--;
             else
-                lotto[i] = numero;
+                lottoTaulukko[i] = numero;
         
         }
 
-        Array.Sort(lotto, 0, 7);
+        Array.Sort(lottoTaulukko, 0, 7);
 
         for (int i = 0; i < 7; i++)
-            Console.Write("{0}  ", lotto[i]);
+            Console.Write("{0}  ", lottoTaulukko[i]);
         
-        Console.Write("+  {0}", lotto[7]);
+        Console.Write("+  {0}", lottoTaulukko[7]);
                 
             
         
