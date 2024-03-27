@@ -6,93 +6,50 @@ from sklearn.model_selection import train_test_split
 from collections import Counter
 import numpy as np
 
-            
-if __name__ == '__main__':
-    dir_list:list[str] = ['chatGPT','studentscodes']
+
+def getpath() -> list[str]:
+
+    dir_list:list[str] = ['chatGPT','copilot','studentscodes']
     file_list:list[str] = []
+
     for directory in os.listdir('.'):
         if directory in dir_list:
             os.chdir(directory)
-            files1 = os.listdir('.')
-            for dir in files1:
+            dir_dir:list[str] = os.listdir('.')
+            for dir in dir_dir:
                 if os.path.isdir(dir):
                     os.chdir(dir)
-                    files = os.listdir('.')
-                    #print(files)
-                    for f in files:
-                        if f == 'src':
-                            os.chdir(f)
-                            f1 = os.listdir('.')
-                            file_list.append(os.getcwd() + f'/{f1[0]}')
-                            #readCode(file=os.getcwd() + f'/{f1[0]}')
+                    dir_dir_dir:list[str] = os.listdir('.')
+                    for file in dir_dir_dir:
+                        if file == 'src':
+                            os.chdir(file)
+                            current_file:list[str] = os.listdir('.')
+                            file_list.append(os.getcwd() + f'/{current_file[0]}')
                             os.chdir('..')
                     os.chdir('..')
-            #print(files1)
             os.chdir('..')
-    #print(file_list)
-            
 
-    words:list[str] = []
-    for file in file_list:
-        f=open(file, 'r',encoding='utf-8')
-        line = f.read()
-        line = re.sub(r'//.*', '', line)
-        line = re.sub(r'/\*(.|\n)*?\*/', '', line)
-        line = re.sub(r'[^a-zA-Z0-9/s]', ' ', line)
-        line = re.sub(r'\busing\b', '', line)
-        line = re.sub(r'\bSystem\b', '', line)
-        words += line.split()
-        f.close()
-    print(len(words))
+    return file_list
 
-    for i in range(len(words)):
-        if not words[i].isalpha():
-            words[i] = ''
 
-    word_dict:dict[str, int] = Counter(words)
 
-    del word_dict['']
-    print(len(word_dict))
-    
-    mostcommon_word = word_dict.most_common(150)
+def readfile(file:str) -> list[str]:
 
-    label:list[int] = []
-    features:list[list[int]] = []
-    #print(mostcommon_word)
-    for e in file_list:
-        try:
-            f=open(e, 'r',encoding='utf-8')
-            line = f.read()
+    new_line:list[str] = []
+    with open(file, 'r',encoding='utf-8') as fr:
+            line:str = fr.read()
+
             line = re.sub(r'//.*', '', line)
             line = re.sub(r'/\*(.|\n)*?\*/', '', line)
+            line = re.sub(r'System(?:\.[\w\d]+)?', '', line)
             line = re.sub(r'[^a-zA-Z0-9/s]', ' ', line)
             line = re.sub(r'\busing\b', '', line)
-            line = re.sub(r'\bSystem\b', '', line)
             new_line = line.split()
-            data:list[int] = []
+    return new_line
 
-            sana = 'for'
-            j:int=0
-            for i in mostcommon_word:
-                data.append(new_line.count(i[0]))
-            features.append(data)
-            
-            
-            if "lottoTaulukko" in line or "lottoRivi" in line or "lottoNumbers" in line or "lotteryNumbers" in line:
-                label.append(1)
-            elif line.count(sana) >= 3:
-                label.append(1)
-            else:
-                label.append(0)
-            f.close()
 
-        except:
-            print(f'Error with file: {e}')
-            continue
 
-    print(label)
-    print(f'features len: {len(features)}')
-    print(f'label len: {len(label)}')
+def bayes(features:list[list[int]], label:list[int], mostcommon_word:dict[str,int]) -> None:
 
     featuresnp = np.array(features)
     print(f'features shape: {np.shape(featuresnp)}')
@@ -100,7 +57,7 @@ if __name__ == '__main__':
     labelnp = np.array(label)
     print(f'label shape: {np.shape(labelnp)}')
 
-    X_train, X_test, y_train, y_test = train_test_split(featuresnp, labelnp, test_size=0.1)
+    X_train, X_test, y_train, y_test = train_test_split(featuresnp, labelnp, test_size=0.2)
 
     print(f'X_train shape: {np.shape(X_train)}')
     print(f'X_test shape: {np.shape(X_test)}')
@@ -109,30 +66,75 @@ if __name__ == '__main__':
     model.fit(X_train, y_train)
     MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
 
-    new_file = ''
     path = 'solution/s1/src/s1.cs'
-    #path = 'chatGPT/AItest01/src/testcode1.cs'
-    with open(path, 'r') as f:
-        line = f.read()
-        line = re.sub(r'//.*', '', line)
-        line = re.sub(r'/\*(.|\n)*?\*/', '', line)
-        line = re.sub(r'[^a-zA-Z0-9/s]', ' ', line)
-        line = re.sub(r'\busing\b', '', line)
-        line = re.sub(r'\bSystem\b', '', line)
-        new_file = line
+    #path = 'copilot/AItest05/src/testcode5.cs'
+   
+    new_file = readfile(path)
     
-    n = new_file.split()
     sample:list[int] = []
-    for i in mostcommon_word:
-        sample.append(n.count(i[0]))
+    for word in mostcommon_word:
+        sample.append(new_file.count(word[0]))
 
-    samplenp = np.array(sample)
-    print(f'sample: {sample}')
-
-    model.predict(np.reshape(samplenp, (1, 110)))
+    model.predict(np.reshape(np.array(sample), (1, len(X_train[1]))))
 
     y_pred:list[str] = model.predict(X_test)
 
-    print(accuracy_score(y_test, y_pred))
+    print(f'{accuracy_score(y_test, y_pred):.2f}')
+
+
+
+def main() -> None:
+
+    file_list:list[str] = getpath()        
+
+    words:list[str] = []
+    for file in file_list:
+            words += readfile(file)
+
+    print(f'words len: {len(words)}')
+
+    for word in range(len(words)):
+        if not words[word].isalpha():
+            words[word] = ''
+
+    word_dict:dict[str, int] = Counter(words)
+
+    del word_dict['']
+    print(f'word_dict len: {len(word_dict)}')
+    N_word_min:int = 30
+
+     # Dictionary words that occur at least N_word_min times 
+    mostcommon_word = {word: occur for word,occur in word_dict.items() if occur > N_word_min}
+    #orded_mostcommon_words = sorted(mostcommon_word.items(), key = lambda x: x[1], reverse = True)
+
+    label:list[int] = []
+    features:list[list[int]] = []
+    #print(mostcommon_word)
+    for file in file_list:
+        new_line = readfile(file)
+        data:list[int] = []
+
+        for word in mostcommon_word:
+            data.append(new_line.count(word[0]))
+        features.append(data)
+            
+        if 'chatGPT' in file or 'copilot' in file:
+            label.append(1)
+        else:
+            label.append(0)
+
+    #print(label)
+    print(f'features len: {len(features)}')
+    print(f'label len: {len(label)}')
+
+    bayes(features=features, label=label,mostcommon_word=mostcommon_word)
+
+    
+if __name__ == '__main__':
+    main()
+
+    
+
+   
     
 

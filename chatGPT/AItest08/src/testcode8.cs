@@ -23,48 +23,31 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Initialize array for Lotto numbers
+        Random random = new Random();
         int[] lottoNumbers = new int[8];
 
-        // Random object for generating random numbers
-        Random random = new Random();
-
-        // Generate Lotto numbers
         for (int i = 0; i < 7; i++)
         {
             int randomNumber;
             do
             {
-                // Generate a random number between 1 and 40
                 randomNumber = random.Next(1, 41);
-                // Check if the generated number already exists in the lottoNumbers array
-            } while (Array.Exists(lottoNumbers, element => element == randomNumber));
-            // If the number is unique, add it to the array
+            } while (Array.IndexOf(lottoNumbers, randomNumber) != -1);
+
             lottoNumbers[i] = randomNumber;
         }
 
-        // Sort the first 7 elements of the array in ascending order
         Array.Sort(lottoNumbers, 0, 7);
 
-        // Generate the additional Lotto number
+        // Arvotaan lisänumero
         lottoNumbers[7] = random.Next(1, 41);
 
-        // Output the Lotto row
-        for (int i = 0; i < 8; i++)
+        // Tulostetaan lottorivi
+        for (int i = 0; i < 7; i++)
         {
-            Console.Write(lottoNumbers[i]);
-            // Add spaces between numbers and after the 7th number (before the additional number)
-            if (i < 7)
-            {
-                Console.Write("   ");
-            }
-            else
-            {
-                Console.Write("   +   ");
-            }
+            Console.Write(lottoNumbers[i] + "   ");
         }
-
-        // Output the additional Lotto number
+        Console.Write("+   ");
         Console.WriteLine(lottoNumbers[7]);
     }
 }
