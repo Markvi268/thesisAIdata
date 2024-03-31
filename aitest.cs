@@ -1,4 +1,4 @@
-﻿/*
+/*
 Luo c# ohjelma: Lotossa arvotaan seitsemän (7) varsinaista numeroa ja yksi (1) lisänumero. Numerot ovat väliltä 1-40.
 
 Esittele kahdeksan (8) alkioinen lotto-taulukko ja arvo siihen lottonumerot (7 ensimmäistä
@@ -17,41 +17,36 @@ ominaisuus, jolla tämän saisi ratkaistua? Voisi esimerkiksi kertoa, että mist
 
 */
 
-// Kysytty 31.3.2024 uusi kysely
+// Kysytty 30.3.2024 chatGPT
 
 using System;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        int[] numbers = new int[8];
-        Random rand = new Random();
+        Random rnd = new Random();
+        int[] lotto = new int[8];
 
-        for (int i = 0; i < numbers.Length - 1; i++)
+        for (int i = 0; i < 7; i++)
         {
-            int num;
+            int randomNumber;
             do
             {
-                num = rand.Next(1, 41);
-            } while (Array.IndexOf(numbers, num, 0, i) != -1);
-
-            numbers[i] = num;
+                randomNumber = rnd.Next(1, 41);
+            } while (Array.IndexOf(lotto, randomNumber) != -1);
+            lotto[i] = randomNumber;
         }
 
-        // Lisänumero
-        numbers[7] = rand.Next(1, 41);
+        lotto[7] = rnd.Next(1, 41);
 
-        // Lajitellaan varsinaiset numerot
-        Array.Sort(numbers, 0, 7);
+        Array.Sort(lotto, 0, 7);
 
-        // Tulostetaan lottorivi
-        for (int i = 0; i < numbers.Length; i++)
+        foreach (int number in lotto)
         {
-            if (i == 7)
-                Console.Write("   +   ");
-            Console.Write(numbers[i] + "   ");
+            Console.Write(number + "   ");
         }
+        Console.Write("+   ");
+        Console.WriteLine(lotto[7]);
     }
 }
-

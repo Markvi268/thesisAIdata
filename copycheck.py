@@ -83,21 +83,10 @@ def similars() -> None:
     
     for i in range(len(paths) - 1):
         first_file:list[str] = readfile(paths[i])
-        sim:int=0
+        s1:str = paths[i].split('chatGPT')[1]
         for j in range(1, len(paths) - i):
-            sim = 0
             second_file:list[str] = readfile(paths[j+i])
-            for line in first_file:
-                for word in second_file:
-                    if line == word:
-                        sim = sim + 1
-
-            first_path_rep = paths[i].replace('/',' ').replace('\\', ' ')
-            first_path_list:list[str] = first_path_rep.split()
-
-            path_rep = paths[j+i].replace('/',' ').replace('\\', ' ')
-
-            path_list:list[str] = path_rep.split()
+            s2:str = paths[j+i].split('chatGPT')[1]
 
             vec1 = Counter(first_file)
             vec2 = Counter(second_file)
@@ -110,8 +99,9 @@ def similars() -> None:
 
             denominator = math.sqrt(sum1) * math.sqrt(sum2)
 
-            #resultsfile.write(f'{path_list[10]}\n')
-            resultsfile.write(f'Tiedoston {first_path_list[10]} ja tiedoston {path_list[10]} samankaltaisuus: {(float(numerator) / denominator):.5f}% \n')
+            result:float = (float(numerator) / denominator)
+            if result > 0.7:
+                resultsfile.write(f'Tiedoston {s1} ja tiedoston {s2} samankaltaisuus: {(float(numerator) / denominator):.5f}% \n')
 
     resultsfile.close()
 

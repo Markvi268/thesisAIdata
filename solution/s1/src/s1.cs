@@ -21,11 +21,11 @@ class Program{
 
     static void Main(){
         int[] lotto = new int[8];
-        Random random = new Random();
+        Random rnd = new Random();
 
         for (int i = 0; i < lotto.Length; i++)
         {
-            int numero = random.Next(1, 41);
+            int numero = rnd.Next(1, 41);
             if(lotto.Contains(numero))
                 i--;
             else

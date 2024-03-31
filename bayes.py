@@ -64,7 +64,7 @@ def bayes(features:list[list[int]], label:list[int], mostcommon_word:dict[str,in
 
     model = MultinomialNB()
     model.fit(X_train, y_train)
-    MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+    #MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
 
     path = 'solution/s1/src/s1.cs'
     #path = 'copilot/AItest05/src/testcode5.cs'

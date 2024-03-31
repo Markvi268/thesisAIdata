@@ -7,7 +7,7 @@ def readCode() -> tuple[dict[str, int], dict[str, int]]:
     occurences_ai:dict[str, int] = {}
     occurences_students:dict[str, int] = {}
 
-    dir_list:list[str] = ['chatGPT','studentscodes']
+    dir_list:list[str] = ['chatGPT','copilot','studentscodes']
 
     for directory in os.listdir('.'):
         if directory in dir_list:
@@ -28,7 +28,7 @@ def readCode() -> tuple[dict[str, int], dict[str, int]]:
                                              tulos = re.search(r'\bint\[\]\s+(\w+)\s*=', line)
                                              tulos1 = re.search(r'\bint\[\,]\s+(\w+)\s*=', line)
                                              #print(line)
-                                             if directory == 'chatGPT':
+                                             if directory == 'chatGPT' or directory == 'copilot':
                                                 if tulos:
                                                     if tulos.group(1) in occurences_ai:
                                                         occurences_ai[tulos.group(1)] += 1
