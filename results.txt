@@ -1,10 +1,10 @@
 AI code:
 lottoTaulukko: 10
-lottoRivi: 12
-lottoNumbers: 13
+lottoRivi: 14
+lottoNumbers: 19
 lotteryNumbers: 1
-lottorivi: 6
-lottoNumerot: 4
+lottorivi: 7
+lottoNumerot: 5
 numbers: 1
 lottery: 1
 numerot: 2
@@ -15,6 +15,7 @@ lottotaulu: 1
 taulukko: 2
 lotto: 5
 lottonumerot: 1
+iLottotaulukko: 1
 iTaulu: 1
 numerot: 1
 taulu1: 1
@@ -25,6 +26,7 @@ lottotaulu: Students 1 AI: 0
 taulukko: Students 2 AI: 0
 lotto: Students 5 AI: 0
 lottonumerot: Students 1 AI: 0
+iLottotaulukko: Students 1 AI: 0
 iTaulu: Students 1 AI: 0
 numerot: Students: 1 AI: 2
 taulu1: Students 1 AI: 0

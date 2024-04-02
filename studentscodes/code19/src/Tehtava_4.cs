@@ -37,7 +37,7 @@ namespace Viikkotehtävät_Vko4
             {
                 Console.Write(iTaulu[i] + " ");
             }
-            Console.Write("+ {0}", iTaulu[7]);
+            Console.Write("+{0}", iTaulu[7]);
             Console.WriteLine();
 
 

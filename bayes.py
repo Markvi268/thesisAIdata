@@ -77,7 +77,7 @@ def bayes(features:list[list[int]], label:list[int], mostcommon_word:dict[str,in
 
     model.predict(np.reshape(np.array(sample), (1, len(X_train[1]))))
 
-    y_pred:list[str] = model.predict(X_test)
+    y_pred = model.predict(X_test)
 
     print(f'{accuracy_score(y_test, y_pred):.2f}')
 

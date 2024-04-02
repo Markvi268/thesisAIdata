@@ -2,12 +2,26 @@ import os
 import re
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
+import time
 
 
 def getpath() -> list[str]:
+    #skiplist:list[str] = ['testall.py', 'results.txt']
+    """
+    This function traverses specific directories in the current directory and collects the paths of certain files.
+
+    The function specifically looks for directories named 'chatGPT', 'copilot', and 'studentscodes'. 
+    Within these directories, it navigates into any subdirectories it finds. 
+    If a subdirectory named 'src' is found, the function collects the path of the first file in this 'src' directory.
+
+    Returns
+    -------
+    list[str]
+        A list of file paths collected from 'src' directories within 'chatGPT', 'copilot', and 'studentscodes' directories.
+    """
 
     dir_list:list[str] = ['chatGPT','copilot','studentscodes']
     file_list:list[str] = []
@@ -31,9 +45,20 @@ def getpath() -> list[str]:
 
     return file_list
 
-
-
 def readfile(file:str) -> list[str]:
+    """
+    This function reads a file and performs several regular expression substitutions on its content.
+
+    Parameters
+    ----------
+    file : str
+        The path to the file to be read.
+
+    Returns
+    -------
+    list[str]
+        The content of the file as a list of strings, with certain patterns removed
+    """
 
     new_line:list[str] = []
     with open(file, 'r',encoding='utf-8') as fr:
@@ -56,74 +81,132 @@ def readfile(file:str) -> list[str]:
             line = re.sub(r'[{}]', '', line, flags=re.MULTILINE)
             line = re.sub(r'^.*\bclass\b.*$', '', line, flags=re.MULTILINE)
             line = re.sub(r'^.*\bstatic void Main\b.*$', '', line, flags=re.MULTILINE)
-            new_line = line.split()
-    splitted_line = "\n".join([rivi for rivi in line.split("\n") if rivi.strip()])
+            line = line.replace('\ufeff','')
+            #new_line = line.split()
+
+    splitted_line = "\n".join([l for l in line.split("\n") if l.strip()])
+
     new_line = splitted_line.split('\n')
-    #print(splitted_line)
+    #print(new_line)
     return new_line
 
-
+    
 
 def bayes(features:list[str], label:list[int]) -> None:
+    """
+    This function performs a Naive Bayes classification on the given features and labels.
 
-    
+    The function first vectorizes the features using CountVectorizer. It then splits the data into training, 
+    validation, and test sets. A grid search is performed to find the best 'alpha' parameter for the 
+    Multinomial Naive Bayes classifier.
+
+    Parameters
+    ----------
+    features : list[str]
+        The features to be used for training the classifier. Each element in the list is a string representing a feature.
+
+    label : list[int]
+        The labels corresponding to the features. Each element in the list is an integer representing a label.
+
+    Returns
+    -------
+    None
+    """
+    print('Start bayes training...')
     vectorized = CountVectorizer()
     X = vectorized.fit_transform(features)
-    X_train, X_test, y_train, y_test = train_test_split(X, label, test_size=0.2)
+    X_train, X_test, y_train, y_test = train_test_split(X, label, test_size=0.2, random_state=42)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, random_state=42)
 
-    print(f'X_train shape: {np.shape(X_train)}')
-    print(f'X_test shape: {np.shape(X_test)}')
+    #print(f'X_train shape: {np.shape(X_train)}')
+    #print(f'X_test shape: {np.shape(X_test)}')
+    #print(f'X_val shape: {np.shape(X_val)}')
 
-    model = MultinomialNB()
-    model.fit(X_train, y_train)
-    MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)
+    params = {'alpha': [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.2, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]}
 
-    #path = 'solution/s1/src/s1.cs'
-    #path = 'copilot/AItest05/src/testcode5.cs'
-    path = 'aitest.cs'
-    #path = 'studentscodes/code18/src/Tehtava_4.cs'
-    print(f'Classifier score: {model.score(X_test, y_test):.5f}')
-    new_file = readfile(path)
+    K_fold:int = 6
+
+    score:float = 0
+    best_param:dict[str,int] = {}
+    for i in range(10):
+        classifier = GridSearchCV(estimator=MultinomialNB(), param_grid=params, cv=K_fold)
+
+        classifier.fit(X_train, y_train)
+
+        if classifier.best_score_ > score:
+            score = classifier.best_score_
+            best_param = classifier.best_params_
+
+        
+
+    best_model = MultinomialNB(alpha=best_param['alpha'])
+    print(f'Best hyperparameter: {best_param}')
+    print(f'Best score: {score:.4f}')
+    best_model.fit(X_train, y_train)
+    y_pred = best_model.predict(X_test)
+    print(f'Test data accuracy: {accuracy_score(y_test, y_pred):.4f}')
+    print('Training completed...')
+    print()
+    print('Testing new .cs file..')
+    time.sleep(3)
+    #path:str = 'solution/s1/src/s1.cs'
+    path:str = 'aitest1.cs'
     
-
+    new_file = readfile(file=path)
     X_test_data = vectorized.transform(new_file)
+    prediction = best_model.predict(X_test_data)
 
-    pred = model.predict(X_test_data)
+    human_count = sum(1 for preds in prediction if preds == 0)
+    ai_count = sum(1 for preds in prediction if preds == 1)
 
-    human_count = sum(1 for preds in pred if preds == 0)
-    ai_count = sum(1 for preds in pred if preds == 1)
-    print(f'Human count: {human_count} AI count: {ai_count}')
-    if human_count > ai_count:
+    printresult(counthuman=human_count,countAI=ai_count)
+
+
+
+def printresult(counthuman:int, countAI:int) -> None:
+    total:int = counthuman + countAI
+    print(f'Human count: {counthuman}/{total} AI count: {countAI}/{total}')
+
+    if counthuman > countAI:
         print('This is a human code')
     else:
         print('This is a AI code')
 
-    #for code, preds in zip(new_file, pred):
+    #for code, preds in zip(new_file, prediction):
      #   print(f'{code} : {preds}')
 
+
 def main() -> None:
+    """
+    This function is the main entry point of the program.
 
-    file_list:list[str] = getpath()        
+    It first retrieves a list of file paths using the `getpath` function. It then reads each file in the list, 
+    categorizing the words into two categories: 'humanwords' and 'aiwords', based on whether 'chatGPT' or 'copilot' 
+    is in the file path. 
 
+    The function then prints the length of 'humanwords' and 'aiwords'. 
+
+    Finally, it combines 'humanwords' and 'aiwords' into a single list 'allcode', creates a corresponding list of labels, 
+    and passes these to the `bayes` function for Naive Bayes classification.
+
+    Returns
+    -------
+    None
+    """
+
+    filepath_list:list[str] = getpath()        
     humanwords:list[str] = []
     aiwords:list[str] = []
-    for file in file_list:
+    for file in filepath_list:
         if 'chatGPT' in file or 'copilot' in file:
             aiwords += readfile(file)
-            #print(nonhumanwords)
-            #break
         else:
             humanwords += readfile(file)
-            #print(humanwords)
-            #break
-
+            
     print(f'words len: {len(humanwords)} AI: {len(aiwords)}')
-    #print(humanwords)
-    #print(file_list)
 
     labels:list[int] = [0]*len(humanwords) + [1]*len(aiwords)
     allcode:list[str] = humanwords + aiwords
-    #print(labels)
 
     bayes(features=allcode, label=labels)
 

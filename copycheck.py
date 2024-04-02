@@ -29,7 +29,7 @@ def getsecondpath() -> list[str]:
 
 
 def getpath() -> list[str]:
-    dir_list:list[str] = ['chatGPT']
+    dir_list:list[str] = ['chatGPT','copilot']
     file_list:list[str] = []
     for directory in os.listdir('.'):
         if directory in dir_list:
@@ -73,20 +73,15 @@ def readfile(file:str) -> list[str]:
 def similars() -> None:
     paths:list[str] = getpath()
     resultsfile=open('copycheck.txt','wt')
-    resultsfile.write('1.0: Taydellinen samankaltaisuus\n'
-            '0.9 - 0.99: Erittain korkea samankaltaisuus\n'
-            '0.8 - 0.89: Korkea samankaltaisuus\n'
-            '0.7 - 0.79: Hyva samankaltaisuus\n'
-            '0.6 - 0.69: Kohtalainen samankaltaisuus\n'
-            '0.5 - 0.59: Vahainen samankaltaisuus\n'
-            '0.0 - 0.49: Vahan tai ei lainkaan samankaltaisuutta\n\n')
     
     for i in range(len(paths) - 1):
         first_file:list[str] = readfile(paths[i])
-        s1:str = paths[i].split('chatGPT')[1]
+        s1:list[str] = paths[i].split('\\')
+        s1final:str = s1[7] + s1[9]
         for j in range(1, len(paths) - i):
             second_file:list[str] = readfile(paths[j+i])
-            s2:str = paths[j+i].split('chatGPT')[1]
+            s2:list[str] = paths[j+i].split('\\')
+            s2final:str = s2[7] + s2[9]
 
             vec1 = Counter(first_file)
             vec2 = Counter(second_file)
@@ -98,10 +93,12 @@ def similars() -> None:
             sum2 = sum([vec2[x]**2 for x in vec2.keys()])
 
             denominator = math.sqrt(sum1) * math.sqrt(sum2)
-
-            result:float = (float(numerator) / denominator)
-            if result > 0.7:
-                resultsfile.write(f'Tiedoston {s1} ja tiedoston {s2} samankaltaisuus: {(float(numerator) / denominator):.5f}% \n')
+            if denominator > 0 and numerator > 0:
+                result:float = (float(numerator) / denominator)*100
+            else:
+                result:float = 0.0
+            if result > 90:
+                resultsfile.write(f'Tiedoston {s1final} ja tiedoston {s2final} samankaltaisuus: {result:.2f}% \n')
 
     resultsfile.close()
 
