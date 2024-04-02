@@ -149,28 +149,39 @@ def bayes(features:list[str], label:list[int]) -> None:
     print()
     print('Testing new .cs file..')
     time.sleep(3)
-    #path:str = 'solution/s1/src/s1.cs'
-    path:str = 'aitest1.cs'
-    
-    new_file = readfile(file=path)
-    X_test_data = vectorized.transform(new_file)
-    prediction = best_model.predict(X_test_data)
+    testfiles:list[str] = get_test_files()
+    for file in testfiles:
 
-    human_count = sum(1 for preds in prediction if preds == 0)
-    ai_count = sum(1 for preds in prediction if preds == 1)
+        new_file = readfile(file=file)
+        X_test_data = vectorized.transform(new_file)
+        prediction = best_model.predict(X_test_data)
 
-    printresult(counthuman=human_count,countAI=ai_count)
+        human_count = sum(1 for preds in prediction if preds == 0)
+        ai_count = sum(1 for preds in prediction if preds == 1)
 
+        printresult(counthuman=human_count,countAI=ai_count, file=file.split('/')[1])
 
+def get_test_files() -> list[str]:
+    """
+    This function retrieves the paths of all .cs files in the 'testfiles' directory.
 
-def printresult(counthuman:int, countAI:int) -> None:
+    Returns
+    -------
+    list[str]
+        A list of file paths to .cs files in the 'testfiles' directory.
+    """
+    file_list:list[str] = []
+    for file in os.listdir('testfiles'):
+        if file.endswith('.cs'):
+            file_list.append(f'testfiles/{file}')
+    return file_list
+
+def printresult(counthuman:int, countAI:int, file:str) -> None:
     total:int = counthuman + countAI
+    pros:float = (counthuman/total)*100
     print(f'Human count: {counthuman}/{total} AI count: {countAI}/{total}')
 
-    if counthuman > countAI:
-        print('This is a human code')
-    else:
-        print('This is a AI code')
+    print(f'{file} is {pros:.2f}% human code')
 
     #for code, preds in zip(new_file, prediction):
      #   print(f'{code} : {preds}')
