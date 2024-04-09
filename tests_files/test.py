@@ -26,7 +26,7 @@ if __name__=='__main__':
     sys.path.insert(0, testpath)
     sys.path.insert(0, path+'src')
  
-    from tests import *
+    from tests_files.hyppy.tests import *
 
     curr_file=os.path.abspath(__file__)
     exname = split(curr_file)[-2]
