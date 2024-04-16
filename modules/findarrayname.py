@@ -2,74 +2,79 @@ import os
 import re
 
 
-def readCode() -> tuple[dict[str, int], dict[str, int]]:
-    #path:str = 'chatGPT/AItest01/src/testcode1.cs'
+def get_file_path() -> list[str]:
+    original_path:str = os.path.dirname(__file__)
+    parent_path:str = os.path.dirname(original_path)
+
+    current_dir:str = parent_path + '/lotto_train_data'
+    file_list:list[str] = []
+    dir_list:list[str] = ['chatgpt_train_data','copilot_train_data','students_train_data']
+    for dir in os.listdir(current_dir):
+        if dir in dir_list:
+            for file in os.listdir(current_dir+'/'+dir):
+                if os.path.isdir(current_dir+'/'+dir+'/'+file):
+                    for f in os.listdir(current_dir+'/'+dir+'/'+file):
+                        if f == 'src':
+                            for f1 in os.listdir(current_dir+'/'+dir+'/'+file+'/'+f):
+                                file_list.append(current_dir+'/'+dir+'/'+file+'/'+f+'/'+f1)
+
+    return file_list           
+                    
+def readfile() -> tuple[dict[str,int], dict[str,int]]:
+    paths:list[str] = get_file_path()
     occurences_ai:dict[str, int] = {}
     occurences_students:dict[str, int] = {}
 
-    dir_list:list[str] = ['chatGPT','copilot','studentscodes']
+    for path in paths:
+        with open(path,'r') as fr:
+            line:str = fr.read()
+            tulos = re.search(r'\bint\[\]\s+(\w+)\s*=', line)
+            tulos1 = re.search(r'\bint\[\,]\s+(\w+)\s*=', line)
+            if 'chatgpt' in path or 'copilot' in path:
+                if tulos:
+                    if tulos.group(1) in occurences_ai:
+                        occurences_ai[tulos.group(1)] += 1
+                    else:
+                        occurences_ai[tulos.group(1)] = 1
+                if tulos1:
+                    if tulos1.group(1) in occurences_ai:
+                        occurences_ai[tulos1.group(1)] += 1
+                    else:
+                        occurences_ai[tulos1.group(1)] = 1
 
-    for directory in os.listdir('.'):
-        if directory in dir_list:
-            #print(f'Found directory: {directory}')
-            os.chdir(directory)
-            for file in os.listdir('.'):
-               if os.path.isdir(file):
-                 #print(f'Found directory in {directory}: {file}')
-                 os.chdir(file)
-                 for file in os.listdir('.'):
-                     if os.path.isdir(file):
-                         if file == 'src':
-                             os.chdir(file)
-                             for file in os.listdir('.'):
-                                 if os.path.exists(os.getcwd()):
-                                     with open (os.getcwd() + f'/{file}', 'r') as file:
-                                         for line in file:
-                                             tulos = re.search(r'\bint\[\]\s+(\w+)\s*=', line)
-                                             tulos1 = re.search(r'\bint\[\,]\s+(\w+)\s*=', line)
-                                             #print(line)
-                                             if directory == 'chatGPT' or directory == 'copilot':
-                                                if tulos:
-                                                    if tulos.group(1) in occurences_ai:
-                                                        occurences_ai[tulos.group(1)] += 1
-                                                    else:
-                                                        occurences_ai[tulos.group(1)] = 1
-                                                if tulos1:
-                                                    if tulos1.group(1) in occurences_ai:
-                                                        occurences_ai[tulos1.group(1)] += 1
-                                                    else:
-                                                        occurences_ai[tulos1.group(1)] = 1
+            if 'students' in path:
+                if tulos:
+                    if tulos.group(1) in occurences_students:
+                        occurences_students[tulos.group(1)] += 1
+                    else:
+                        occurences_students[tulos.group(1)] = 1
+                if tulos1:
+                    if tulos1.group(1) in occurences_students:
+                        occurences_students[tulos1.group(1)] += 1
+                    else:
+                        occurences_students[tulos1.group(1)] = 1
 
-                                             if directory == 'studentscodes':
-                                                if tulos:
-                                                    if tulos.group(1) in occurences_students:
-                                                        occurences_students[tulos.group(1)] += 1
-                                                    else:
-                                                        occurences_students[tulos.group(1)] = 1
-                                                if tulos1:
-                                                    if tulos1.group(1) in occurences_students:
-                                                        occurences_students[tulos1.group(1)] += 1
-                                                    else:
-                                                        occurences_students[tulos1.group(1)] = 1
-                                                 
-                                                 
-                                 os.chdir('..')
-                             os.chdir('..')
-            os.chdir('..')
-    return (occurences_ai, occurences_students)            
-                    
-                       
+    return (occurences_ai, occurences_students)
+
+
+
+
 def writeCode() -> None:
-    occurences_ai, occurences_students = readCode()
+    occurences_ai, occurences_students = readfile()
+
     
-    with open ('results.txt','w') as f:
+    with open ('arraynames.txt','w') as f:
         f.write('AI code:\n')
         for key, value in occurences_ai.items():
             f.write(f'{key}: {value}\n')
+        f.write('-'*20+'\n')
+        f.write(f'Total: {sum(occurences_ai.values())}\n')
         f.write('\n')
         f.write('Students code:\n')
         for key, value in occurences_students.items():
             f.write(f'{key}: {value}\n')
+        f.write('-'*20+'\n')
+        f.write(f'Total: {sum(occurences_students.values())}\n')
         f.write('\n')
         f.write('Differences:\n')
         for key, value in occurences_students.items():
