@@ -7,8 +7,8 @@ def create_ai_train_data_tree() -> None:
     original_path:str = os.path.dirname(__file__)
     parent_path:str = os.path.dirname(original_path)
     copytestspath = parent_path + '/tests_files'
-    dir_list:list[str] = ['chatgpt_train_data','copilot_train_data']
-    current_dir:str = 'file_train_data'
+    dir_list:list[str] = ['']
+    current_dir:str = ''
     for directory in os.listdir('../'):
         if directory == current_dir:
             os.chdir('../'+directory)
@@ -49,8 +49,8 @@ def create_ai_train_data_tree() -> None:
 def create_student_train_data_tree() -> None:
     original_path:str = os.path.dirname(__file__)
     parent_path:str = os.path.dirname(original_path)
-    dir_list:list[str] = ['file_train_data']
-    current_dir:str = 'students_train_data'
+    dir_list:list[str] = ['']
+    current_dir:str = ''
     copypath =parent_path + '/tiedosto'
     copytestspath = parent_path + '/tests_files'
     i:int = 1

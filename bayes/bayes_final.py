@@ -45,7 +45,7 @@ def bayes(features:list[str], label:list[int],test_files:list[str]) -> None:
     X_train, X_test, y_train, y_test = train_test_split(X, label, test_size=0.2,random_state=40)
 
     params:dict[str,list[float]] = {'alpha': [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.2, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.5, 2.0, 3.0]}
-
+    
     K_fold:int = 4
     model = MultinomialNB()
     classifier = GridSearchCV(estimator=model, param_grid=params, cv=K_fold)
@@ -66,6 +66,7 @@ def bayes(features:list[str], label:list[int],test_files:list[str]) -> None:
     time.sleep(2)
     testfiles:list[str] = hm.get_test_files(test_files)
     result_list:list[str] = []
+    i:int = 1
     for file in testfiles:
         new_file = hm.read_and_clean_file(file=file)
         X_test_data = vectorized.transform(new_file)
@@ -76,7 +77,8 @@ def bayes(features:list[str], label:list[int],test_files:list[str]) -> None:
         total:int = human_count + ai_count
         pros:float = (human_count/total)*100
         f = file.split('/')[1]
-        result_list.append(f'{f} is {100-pros:.2f} % AI code')
+        result_list.append(f't{i} is {100-pros:.2f} % AI code')
+        i = i + 1
 
     print('Testing completed...\n')
     writefile(result_list)
@@ -108,8 +110,7 @@ def main() -> None:
     """
     This function is the main entry point of the program.
 
-    It first retrieves a list of file paths using the `getpaths` function from three different directories: 
-    'file_train_data', 'lotto_train_data', and 'hyppy_train_data'. 
+    It first retrieves a list of file paths using the `getpaths` function from different directories
 
     It then reads each file in the list, categorizing the words into two categories: 'humanwords' and 'aiwords', 
     based on whether 'chatgpt' or 'copilot' is in the file path. 
@@ -123,12 +124,14 @@ def main() -> None:
     -------
     None
     """
-    test_file_dirs:list[str] = ['lotto_test_data','hyppy_test_data','file_test_data']
+    # Insert to list test data directories
+    test_file_dirs:list[str] = []
 
+    # train data directories
     filepath_list:list[str] = []
-    filepath_list += hm.getpaths('file_train_data')
-    filepath_list += hm.getpaths('lotto_train_data')
-    filepath_list += hm.getpaths('hyppy_train_data')        
+    filepath_list += hm.getpaths('')
+    filepath_list += hm.getpaths('')
+    filepath_list += hm.getpaths('')        
     humanwords:list[str] = []
     aiwords:list[str] = []
     for file_path in filepath_list:

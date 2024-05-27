@@ -71,10 +71,9 @@ def read_and_clean_file(file:str) -> list[str]:
         The content of the file as a list of strings, with certain patterns removed.
     """
 
-    cleaned_file:list[str] = []
+    flist:list[str] = []
     with open(file, 'r',encoding='utf-8') as fr:
             line:str = fr.read()
-
             line = re.sub(r'/\*(.|\n)*?\*/', '', line)
             line = re.sub(r'//.*$', '', line, flags=re.MULTILINE)
             line = re.sub(r'^//.*$', '', line, flags=re.MULTILINE)
@@ -87,10 +86,9 @@ def read_and_clean_file(file:str) -> list[str]:
             line = re.sub(r'^.*\bstatic void Main\b.*$', '', line, flags=re.MULTILINE)
             line = line.replace('\ufeff','')
 
-    splitted_line = "\n".join([l for l in line.split("\n") if l.strip()])
-
-    cleaned_file = splitted_line.split('\n')
-    return cleaned_file
+    hlist = "\n".join([l for l in line.split("\n") if l.strip()])
+    flist = hlist.split('\n')
+    return flist
 
 
 def get_test_files(test_files:list[str]) -> list[str]:

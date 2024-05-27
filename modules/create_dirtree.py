@@ -183,7 +183,7 @@ def started():
     return started_tests
 
 """
-skiplist = ['.git','helpers','dotnet_test','__pycache__','studentscodes','.gitignore','LICENSE','README.md','thesisAIdata.sln','solution','create_dirtree.py']
+skiplist = ['']
 def create_AIdirtree() -> None:
     
     for directory in os.listdir('.'):
@@ -234,9 +234,9 @@ def create_AIdirtree() -> None:
 
 
 def studenCodeTree() -> None:
-    skiplist1 = ['.git','helpers','dotnet_test','__pycache__','tests','chatGPT','copilot','.gitignore','LICENSE','README.md','thesisAIdata.sln','solution']
+    skiplist1 = ['']
 
-    copypath = 'C:/Users/Markku/Desktop/Markku_Koulu/Opinnäytetyö/lotto/lotto'
+    copypath = ''
     i:int = 1
     for directory in os.listdir('.'):
         if directory in skiplist1:

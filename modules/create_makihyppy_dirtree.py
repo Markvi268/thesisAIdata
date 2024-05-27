@@ -6,9 +6,9 @@ import time
 def create_ai_train_data_tree() -> None:
     original_path:str = os.path.dirname(__file__)
     parent_path:str = os.path.dirname(original_path)
-    copytestspath = parent_path + '/hyppy_tests_files'
-    dir_list:list[str] = ['chatgpt_train_data','copilot_train_data']
-    current_dir:str = 'hyppy_train_data'
+    copytestspath = parent_path + ''
+    dir_list:list[str] = ['']
+    current_dir:str = ''
     for directory in os.listdir('../'):
         if directory == current_dir:
             os.chdir('../'+directory)
@@ -49,10 +49,10 @@ def create_ai_train_data_tree() -> None:
 def create_student_train_data_tree() -> None:
     original_path:str = os.path.dirname(__file__)
     parent_path:str = os.path.dirname(original_path)
-    dir_list:list[str] = ['hyppy_train_data']
-    current_dir:str = 'students_train_data'
-    copypath =parent_path + '/makihyppy'
-    copytestspath = parent_path + '/hyppy_tests_files'
+    dir_list:list[str] = ['']
+    current_dir:str = ''
+    copypath =parent_path + ''
+    copytestspath = parent_path + ''
     i:int = 1
     for directory in os.listdir('../'):
         if directory in dir_list:
